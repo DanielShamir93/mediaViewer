@@ -93,6 +93,20 @@ document.getElementById('lights-switch-checkbox').addEventListener('click', e =>
 
 let imgShow = (img) => {
     let imgArr = Array.prototype.slice.call(document.querySelectorAll('.img'));
+    let imgWidth = 0;
+    let imgHeight = 0;
+    let sizeRatio = 0;
+
+    if (img.naturalWidth <= img.naturalHeight) {
+        sizeRatio = img.naturalWidth / img.naturalHeight;
+        imgWidth = (window.innerHeight / 2) * sizeRatio;
+        imgHeight = window.innerHeight / 2;
+    } else {
+        sizeRatio = img.naturalHeight / img.naturalWidth;
+        imgHeight = (window.innerWidth / 2) * sizeRatio;
+        imgWidth = window.innerWidth / 2;
+    }
+
     document.querySelector('.switch-frame').style.visibility = 'visible';
     if (imgArr.length === 0) {
         return;
@@ -102,11 +116,11 @@ let imgShow = (img) => {
         position: 'fixed',
         left: '50%',
         top: '50%',
-        marginLeft: '-' + Math.floor(img.naturalWidth / 2) + 'px',
-        marginTop: '-' + Math.floor(img.naturalHeight / 2) + 'px',
+        marginLeft: '-' + Math.floor(imgWidth / 2) + 'px',
+        marginTop: '-' + Math.floor(imgHeight / 2) + 'px',
         zIndex: '100',
-        width: img.naturalWidth + 'px',
-        height: img.naturalHeight + 'px',
+        width: imgWidth + 'px',
+        height: imgHeight + 'px',
         transform: 'perspective(800px) rotateY(0deg) rotate(0deg)'
     });
     let lightsOn = document.getElementById('lights-switch-checkbox').checked;

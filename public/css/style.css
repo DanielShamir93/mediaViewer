@@ -209,6 +209,7 @@
     visibility: hidden;
     top: 50%;
     width: 100vw;
+    z-index: 1000;
 }
 
 .move-frame {
@@ -223,7 +224,7 @@
 }
 
 .prev_frame {
-    left: 5%;
+    left: 20%;
     background-image: url(/icons/left.png);
     background-repeat: no-repeat;
     background-size: contain;
@@ -231,7 +232,7 @@
 }
 
 .next_frame {
-    right: 10%;
+    right: 20%;
     background-image: url(/icons/right.png);
     background-repeat: no-repeat;
     background-size: contain;
@@ -243,11 +244,11 @@
 }
 
 .prev_frame:active {
-    left: 4.8%;
+    left: 19.8%;
 }
 
 .next_frame:active {
-    right: 9.8%;
+    right: 19.8%;
 }
 
 .editor {
