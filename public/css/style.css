@@ -1,0 +1,321 @@
+:root {
+    --body-color: rgb(217, 227, 241);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    height: 100vh;
+    position: relative;
+}
+
+/* navigation bar css */
+
+#nav-cont {
+    width: 0;
+    background-color: var(--body-color);
+    transition: 1s;
+}
+
+.nav {
+    width: 0;
+    height: 100%;
+    position: fixed;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    box-shadow: 0 10px 10px 0px black;
+    transition: 1s;
+}
+
+#upload-form {
+    position: relative;
+    width: 300px;
+    height: 150px;
+}
+
+#upload-input {
+    position: absolute;
+    right: 0;
+    width: 300px;
+}
+
+#upload-btn {
+    position: absolute;
+    top: 75px;
+    right: 110px;
+    pointer-events: none;
+}
+
+#upload-status-card {
+    position: absolute;
+    top: 150px;
+    right: 10px;
+    width: 280px;
+    height: 150px;
+    overflow-y:scroll;
+}
+
+#nav-first-hr {
+    position: absolute;
+    top: 300px;
+    right: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 280px;
+}
+
+#nav-arrow_btn {
+    width: 40px;
+    height: 40px;
+    background-image: url(/icons/left_arrow.png);
+    transform: scaleX(-1);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: var(--body-color);
+    cursor: pointer;
+    position: absolute;
+    right: -40px;
+    top: 0;
+    border: none;
+    border-radius: 0 0 0 15px;
+    box-shadow: 0 0px 10px 0px black;
+    opacity: 0.8;
+}
+
+#nav-arrow_btn:hover {
+    opacity: 1;
+}
+
+#img-size-range {
+    position: absolute;
+    top: 350px;
+    right: 25px;
+    width: 250px;
+}
+
+#select-cont {
+    position: absolute;
+    top: 400px;
+    right: 25px;
+    width: 250px;
+    height: 400px;
+}
+
+#collection-select {
+    width: 250px;
+    position: relative;
+}
+
+#collections-btns {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#collections-btns > button {
+    margin-right: 10px;
+}
+
+/* gallery css */
+
+.gallery_wrapper {
+    margin: 50px 50px 50px 50px;
+    background-color: white;
+    border-radius: 20px 20px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: 1s;
+}
+
+#lights-switch-cont {
+    position: absolute;
+    right: -20px;
+    top: -40px;
+}
+
+#lights-switch-checkbox {
+    cursor: pointer;
+}
+
+#collection-name {
+    position: absolute;
+    font-size: 30px;
+    width: 300px;
+    text-align: center;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: 20px;
+}
+
+.gallery {
+    margin-top: 120px;
+    margin-bottom: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    flex-flow: row wrap;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    justify-content: center;
+    align-content: flex-start;
+}
+
+.frame {
+    height: 150px;
+    width: 180px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.img {
+    position: relative;
+    height: 150px;
+    width: 180px;
+    background-color: rgb(144, 144, 144);
+    border-radius: 20px 20px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    transform-origin: center;
+    transform: perspective(800px) rotateY(20deg);
+    transition: 0.5s;
+}
+
+.img:hover {
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+}
+
+.img-show-num {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    font-size: 50px;
+    color: white;
+    z-index: 10000;
+}
+
+#control {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    margin-left: -250px;
+    z-index: 1000;
+}
+
+.switch-frame {
+    position: fixed;
+    visibility: hidden;
+    top: 50%;
+    width: 100vw;
+}
+
+.move-frame {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255);
+    cursor: pointer;
+    border-radius: 15px 15px;
+    opacity: 0.5;
+    z-index: 1000;
+}
+
+.prev_frame {
+    left: 5%;
+    background-image: url(/icons/left.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: none;
+}
+
+.next_frame {
+    right: 10%;
+    background-image: url(/icons/right.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: none;
+}
+
+.prev_frame:hover, .next_frame:hover {
+    opacity: 0.8;
+}
+
+.prev_frame:active {
+    left: 4.8%;
+}
+
+.next_frame:active {
+    right: 9.8%;
+}
+
+.editor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.canvas-block {
+    position: fixed;
+    background-color: black;
+    pointer-events: auto;
+}
+
+.filters-cont {
+    position: absolute;
+    top: 100px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding-left: 10px;
+    border-radius: 10px 10px;
+}
+
+#filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#filters li {
+    margin: 10px 10px 0 0;
+}
+
+.effects-cont {
+    position: absolute;
+    top: 500px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding-left: 10px;
+    border-radius: 10px 10px;
+}
+
+#effects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    list-style-type: none;
+}
+
+#effects li {
+    margin: 10px 10px 0 0;
+}
+
+#effects li button {
+    width: 120px;
+}
+
+#img-resize-range {
+    position: absolute;
+    top: 50px;
+    left: 25px;
+    width: 200px;
+}
+
+.set-editor-cont {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
