@@ -99,8 +99,8 @@ let imgShow = (img) => {
 
     if (img.naturalWidth <= img.naturalHeight) {
         sizeRatio = img.naturalWidth / img.naturalHeight;
-        imgWidth = (window.innerHeight / 2) * sizeRatio;
-        imgHeight = window.innerHeight / 2;
+        imgWidth = (window.innerHeight / 1.5) * sizeRatio;
+        imgHeight = window.innerHeight / 1.5;
     } else {
         sizeRatio = img.naturalHeight / img.naturalWidth;
         imgHeight = (window.innerWidth / 2) * sizeRatio;
@@ -152,30 +152,50 @@ let imgBackToGallery = (img, eventTarget) => {
 }
 
 
-let toEditImgArr = [];
+let toMarkImgArr = [];
 document.addEventListener('mousedown', e => {
     let img = e.target;
     const properties = window.getComputedStyle(img);
     let imgPos = properties.position;
     if (imgPos === 'relative') {
         if (img.className === 'img' && e.shiftKey) {
-            if (toEditImgArr.includes(img)) {
+            if (toMarkImgArr.includes(img)) {
                 img.style.opacity = '1';
-                toEditImgArr = toEditImgArr.filter(elem => {
+                toMarkImgArr = toMarkImgArr.filter(elem => {
                     return elem !== img;
                 });
             } else {
                 document.getElementById(img.id).style.opacity = '0.7';
-                toEditImgArr.push(img);
+                toMarkImgArr.push(img);
             }
         }
-        else if (e.target !== 'img' && toEditImgArr.length > 0) {
-            toEditImgArr.forEach(elem => {
+        else if (e.target !== 'img' && toMarkImgArr.length > 0 && e.target.id !== 'remove-img-btn') {
+            toMarkImgArr.forEach(elem => {
                 elem.style.opacity = '1';
             });
-            toEditImgArr = [];
+            toMarkImgArr = [];
+        }
+
+        if (toMarkImgArr.length > 0) {
+            Object.assign(document.getElementById('remove-img-btn').style, {
+                pointerEvents: 'auto',
+                opacity: '1'
+            });
+        } else {
+            Object.assign(document.getElementById('remove-img-btn').style, {
+                pointerEvents: 'none',
+                opacity: '0.7'
+            });
         }
     }
+});
+
+document.getElementById('remove-img-btn').addEventListener('mousedown', () => {
+    let idArr = [];
+    toMarkImgArr.forEach(img => {
+        idArr.push(img.id);
+    });
+    document.getElementById('remove-img-btn').value = idArr;
 });
 
 // animate gallery
@@ -229,21 +249,18 @@ document.getElementById('edit-img-btn').addEventListener('click', e => {
         let lastImgPos = properties.position;
 
         if (lastImgPos === 'fixed') {
-            lastImg.style.visibility = 'hidden';
             const canvas = document.querySelector('.canvas-block');
             const ctx = canvas.getContext('2d');
             const editor = document.querySelector('.editor');
             const nav = document.getElementById('nav');
 
             document.querySelector('.switch-frame').style.visibility = 'hidden';
+            lastImg.style.visibility = 'hidden';
+            editor.style.visibility = 'visible';
             
             if (nav.clientWidth > 0) {
                 document.getElementById('nav-arrow_btn').click();
             }
-
-            Object.assign(editor.style, {
-                visibility: 'visible'
-            });
 
             Object.assign(canvas.style, {
                 visibility: 'visible',

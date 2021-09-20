@@ -1,14 +1,30 @@
-const UploadModel = require('../database/schema');
+const MediaModel = require('../database/schema');
 const fs = require('fs');
 
-let upload_msg = [];
+let serverMsgArr = [];
 
 exports.home = async (req, res, next) => {
-    const images = await UploadModel.find();
-    res.render('main', { images, upload_msg }); // render main from 'view engine' back to the user
+    const mediaArr = await MediaModel.find();
+    res.render('main', { mediaArr, serverMsgArr }); // render main from 'view engine' back to the user
 }
 
+
+exports.remove = async (req, res, next) => {
+    serverMsgArr = [];
+    let toRemoveArr = req.body.mediaToRemove.split(',');
+
+    let result = await MediaModel.deleteMany({fileName: {$in: toRemoveArr}});
+    if (result.deletedCount > 0) {
+        serverMsgArr.push(`successfully removed ${result.deletedCount} items.`);
+    }
+ 
+    const mediaArr = await MediaModel.find();
+    res.render('main', { mediaArr, serverMsgArr }); // render main from 'view engine' back to the user
+}
+
+
 exports.uploads = (req, res, next) => {
+    serverMsgArr = [];
     const files = req.files;
 
     if (!files) {
@@ -18,32 +34,31 @@ exports.uploads = (req, res, next) => {
     }
 
     //convert images into base64 encoding
-    let imgArr = files.map(file => {
-        let img = fs.readFileSync(file.path);
-        return img.toString('base64');
+    let mediaArr = files.map(file => {
+        let media = fs.readFileSync(file.path);
+        return media.toString('base64');
     });
 
-    let resultArr = imgArr.map((src, index) => {
+    let resultArr = mediaArr.map((src, index) => {
         // create object to store data in the database
-        let finalImg = {
-            filename: files[index].originalname,
+        let mediaFile = {
+            fileName: files[index].originalname,
             contentType: files[index].mimetype,
             imageBase64: src
         }
-        let newUpload = new UploadModel(finalImg);
-        return newUpload
+        return new MediaModel(mediaFile)
             .save()
             .then(() => {
-                upload_msg.push(files[index].originalname + ' uploaded successfully.');
+                serverMsgArr.push(files[index].originalname + ' uploaded successfully.');
             })
             .catch(err => {
                 if (err) {
                     if (err.name === 'MongoError' && err.code === 11000) {
                         // return Promise.reject({err: `Duplicate ${files[index].originalname}. File already exists!`});
-                        upload_msg.push(files[index].originalname + ' already exists.');
+                        serverMsgArr.push(files[index].originalname + ' already exists.');
                     } else {
                         // return Promise.reject({err: err.massage || `Cannot Upload ${files[index].originalname}. Something missing!`});
-                        upload_msg.push('Cannot upload' + files[index].originalname + '.');
+                        serverMsgArr.push('Cannot upload' + files[index].originalname + '.');
                     }
                 }
             });

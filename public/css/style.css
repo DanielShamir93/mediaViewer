@@ -196,14 +196,6 @@
     z-index: 10000;
 }
 
-#control {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    margin-left: -250px;
-    z-index: 1000;
-}
-
 .switch-frame {
     position: fixed;
     visibility: hidden;
@@ -251,6 +243,19 @@
     right: 19.8%;
 }
 
+#control {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    margin-left: -250px;
+    z-index: 1000;
+}
+
+#remove-img-btn {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .editor {
     position: fixed;
     top: 0;
@@ -259,6 +264,7 @@
     width: 100vw;
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
 }
 
 .canvas-block {

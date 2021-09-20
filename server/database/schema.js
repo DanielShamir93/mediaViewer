@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 // create structure of mongodb database
-const uploadSchema = new mongoose.Schema({
-    filename: {
+const mediaSchema = new mongoose.Schema({
+    fileName: {
         type: String,
         unique: true,
         required: true
@@ -18,6 +18,6 @@ const uploadSchema = new mongoose.Schema({
 });
 
 // set the structure from above to files from uploads directory
-UploadModel = mongoose.model('uploads', uploadSchema);
+MediaModel = mongoose.model('media', mediaSchema);
 
-module.exports = UploadModel;
+module.exports = MediaModel;

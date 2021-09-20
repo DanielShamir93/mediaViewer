@@ -19,6 +19,7 @@ let filtersObj = {
 //effects variables
 let lastEffect = undefined;
 let newEffect = undefined;
+let lastEffectBtn = undefined;
 
 
 document.addEventListener('click', e => {
@@ -105,6 +106,11 @@ document.addEventListener('click', e => {
             .sharpen(filtersObj.sharpen)
             .stackBlur(filtersObj.stackBlur)
             .render(() => {
+                e.target.style.opacity = '0.7';
+                if (lastEffectBtn) {
+                    lastEffectBtn.style.opacity = '1';
+                }
+                lastEffectBtn = e.target;
                 isRenderRunning = false;
             });
         });
@@ -125,7 +131,10 @@ document.getElementById('clear-edit-btn').addEventListener('click', e => {
             isRenderRunning = false;
         });
     });
-
+    
+    if (lastEffectBtn) {
+        lastEffectBtn.style.opacity = '1';
+    }
 });
 
 document.getElementById('cancel-edit-btn').addEventListener('click', e => {
@@ -139,6 +148,9 @@ document.getElementById('cancel-edit-btn').addEventListener('click', e => {
     canvas.style.visibility = 'hidden';
     lastImg.style.visibility = 'visible';
     document.querySelector('.switch-frame').style.visibility = 'visible';
+    if (lastEffectBtn) {
+        lastEffectBtn.style.opacity = '1';
+    }
 });
 
 document.getElementById('apply-edit-btn').addEventListener('click', e => {
@@ -159,6 +171,9 @@ document.getElementById('apply-edit-btn').addEventListener('click', e => {
     canvas.style.visibility = 'hidden';
     lastImg.style.visibility = 'visible';
     document.querySelector('.switch-frame').style.visibility = 'visible';
+    if (lastEffectBtn) {
+        lastEffectBtn.style.opacity = '1';
+    }
 });
 
 document.getElementById('crop-img-btn').addEventListener('click', e => {
