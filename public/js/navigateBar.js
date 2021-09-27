@@ -6,17 +6,21 @@ document.getElementById('nav-arrow_btn').addEventListener('click', () => {
     if (nav_cont.clientWidth === 300) {
         nav_cont.style.width = '0px';
         nav.style.width ='0px';
-        Object.assign(arrow.style, {
-            transform: 'scaleX(-1)', 
-            borderRadius: '0 0 0 15px'
-        });
+        setTimeout(() => {
+            Object.assign(arrow.style, {
+                transform: 'scaleX(-1)', 
+                borderRadius: '0 0 0 15px'
+            });
+        }, 800);
     } else {
         nav_cont.style.width = '300px';
         nav.style.width ='300px';
-        Object.assign(arrow.style, {
-            transform: 'scaleX(1)', 
-            borderRadius: '0 0 15px 0'
-        });
+        setTimeout(() => {
+            Object.assign(arrow.style, {
+                transform: 'scaleX(1)', 
+                borderRadius: '0 0 15px 0'
+            });
+        }, 800);
     }
 });
 

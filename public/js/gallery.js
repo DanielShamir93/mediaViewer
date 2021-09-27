@@ -7,7 +7,7 @@ let ImgOnShowDegrees = 0;
 // gallery img class listener
 document.addEventListener('click', e => {
 
-    if (e.target.className !== 'img' || e.shiftKey) {
+    if (e.target.className !== 'img' || e.ctrlKey) {
         return;
     }
 
@@ -25,7 +25,6 @@ document.addEventListener('click', e => {
     } 
     else if (imgPos === 'fixed') {
         imgBackToGallery(img, e.target);
-        document.querySelector('.img-show-num').textContent = '';
     }
 
 });
@@ -47,19 +46,21 @@ document.getElementById('img-size-range').oninput = e => {
             elem.style.height = MIN_IMG_HEIGHT + AMPLIFY * sliderVal + 'px';
         } 
     });
+
+    document.getElementById('img-size-percentage').innerText = sliderVal + 10 + '%';
 };
 
 document.addEventListener('click', e => {
     const moveImg = e.target;
 
     // clicked move-frame element
-    if (moveImg.className === 'move-frame prev_frame' || moveImg.className === 'move-frame next_frame') {
+    if (moveImg.id === 'prev-frame-btn' || moveImg.id === 'next-frame-btn') {
         let imgNodeList = document.querySelectorAll('.img');
         let imgArr = Array.prototype.slice.call(imgNodeList);
         let currImgIndex = imgArr.indexOf(lastImg);
 
         // preview button
-        if (moveImg.className === 'move-frame prev_frame') {
+        if (moveImg.id === 'prev-frame-btn') {
             let elem = imgArr[currImgIndex - 1];
             currImg = elem ? elem : imgArr[imgArr.length - 1];
             imgShow(currImg);
@@ -123,6 +124,13 @@ let imgShow = (img) => {
         height: imgHeight + 'px',
         transform: 'perspective(800px) rotateY(0deg) rotate(0deg)'
     });
+    let removeImgBtn = document.getElementById('remove-img-btn');
+    Object.assign(removeImgBtn.style, {
+        pointerEvents: 'auto',
+        opacity: '1'
+    });
+    toMarkImgArr = [];
+    toMarkImgArr.push(img);
     let lightsOn = document.getElementById('lights-switch-checkbox').checked;
     if (lightsOn) {
         document.getElementById('lights-switch-checkbox').click();
@@ -142,12 +150,18 @@ let imgBackToGallery = (img, eventTarget) => {
         height: MIN_IMG_HEIGHT + imgSliderVal * AMPLIFY + 'px',
         transform: 'perspective(800px) rotateY(20deg) rotate(0deg)'
     });
-    if(eventTarget.className !== 'move-frame prev_frame' && eventTarget.className !== 'move-frame next_frame') {
+    if (eventTarget.id !== 'prev-frame-btn' && eventTarget.id !== 'next-frame-btn') {
         document.querySelector('.switch-frame').style.visibility = 'hidden';
+        document.querySelector('.img-show-num').textContent = '';
         let lightsOn = document.getElementById('lights-switch-checkbox').checked;
         if (!lightsOn) {
             document.getElementById('lights-switch-checkbox').click();
         }
+        let removeImgBtn = document.getElementById('remove-img-btn');
+        Object.assign(removeImgBtn.style, {
+            pointerEvents: 'none',
+            opacity: '0.4'
+        });
     }
 }
 
@@ -155,48 +169,128 @@ let imgBackToGallery = (img, eventTarget) => {
 let toMarkImgArr = [];
 document.addEventListener('mousedown', e => {
     let img = e.target;
-    const properties = window.getComputedStyle(img);
-    let imgPos = properties.position;
-    if (imgPos === 'relative') {
-        if (img.className === 'img' && e.shiftKey) {
-            if (toMarkImgArr.includes(img)) {
-                img.style.opacity = '1';
-                toMarkImgArr = toMarkImgArr.filter(elem => {
-                    return elem !== img;
+    if (img.className === 'img') {
+        const imgProperties = window.getComputedStyle(img);
+        let imgPos = imgProperties.position;
+        if (imgPos === 'relative') {
+            if (e.ctrlKey) {
+                if (toMarkImgArr.includes(img)) {
+                    img.style.opacity = '1';
+                    toMarkImgArr = toMarkImgArr.filter(elem => {
+                        return elem !== img;
+                    });
+                } else {
+                    document.getElementById(img.id).style.opacity = '0.4';
+                    toMarkImgArr.push(img);
+                }
+            }
+            else if (toMarkImgArr.length > 0 && e.target.id !== 'remove-img-btn') {
+                toMarkImgArr.forEach(elem => {
+                    elem.style.opacity = '1';
                 });
-            } else {
-                document.getElementById(img.id).style.opacity = '0.7';
-                toMarkImgArr.push(img);
+                toMarkImgArr = [];
             }
         }
-        else if (e.target !== 'img' && toMarkImgArr.length > 0 && e.target.id !== 'remove-img-btn') {
-            toMarkImgArr.forEach(elem => {
-                elem.style.opacity = '1';
-            });
-            toMarkImgArr = [];
-        }
+    }
+    else if (toMarkImgArr.length > 0 && e.target.id !== 'remove-img-btn') {
+        toMarkImgArr.forEach(elem => {
+            elem.style.opacity = '1';
+        });
+        toMarkImgArr = [];
+    }
 
-        if (toMarkImgArr.length > 0) {
-            Object.assign(document.getElementById('remove-img-btn').style, {
-                pointerEvents: 'auto',
-                opacity: '1'
-            });
-        } else {
-            Object.assign(document.getElementById('remove-img-btn').style, {
-                pointerEvents: 'none',
-                opacity: '0.7'
-            });
-        }
+    // remove-img-btn state
+    let removeImgBtn = document.getElementById('remove-img-btn');
+    if (toMarkImgArr.length > 0) {
+        Object.assign(removeImgBtn.style, {
+            pointerEvents: 'auto',
+            opacity: '1'
+        });
+    } else {
+        Object.assign(removeImgBtn.style, {
+            pointerEvents: 'none',
+            opacity: '0.4'
+        });
     }
 });
 
-document.getElementById('remove-img-btn').addEventListener('mousedown', () => {
+$('#remove-img-btn').click(e => {
     let idArr = [];
     toMarkImgArr.forEach(img => {
         idArr.push(img.id);
     });
-    document.getElementById('remove-img-btn').value = idArr;
+    $.ajax({
+        url: '/remove-media',
+        method: 'POST',
+        data: { idArr },
+        contentType: 'application/x-www-form-urlencoded',
+        success: res => {
+            let oldGalleryArr = Array.prototype.slice.call(document.querySelectorAll('.img'));
+
+            let thereIsNoImgOnShow = oldGalleryArr.every(img => {
+                if (isImgOnShow(img)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            if (!thereIsNoImgOnShow) {
+                document.getElementById('next-frame-btn').click();
+            }
+
+            oldGalleryArr.forEach(img => {
+                if (!res.updatedGalleryArr.includes(img.id)) {
+                    document.querySelector('.gallery').removeChild(document.getElementById('frame_' + img.id));
+                }
+            });
+
+            if (!thereIsNoImgOnShow) {
+                let imgShowNum = parseInt(document.querySelector('.img-show-num').textContent);
+                if (res.updatedGalleryArr.length === 0) {
+                    document.querySelector('.switch-frame').style.visibility = 'hidden';
+                    document.querySelector('.img-show-num').textContent = '';
+                    let lightsOn = document.getElementById('lights-switch-checkbox').checked;
+                    if (!lightsOn) {
+                        document.getElementById('lights-switch-checkbox').click();
+                    }
+                    let removeImgBtn = document.getElementById('remove-img-btn');
+                    Object.assign(removeImgBtn.style, {
+                        pointerEvents: 'none',
+                        opacity: '0.4'
+                    });
+                }
+                else if (res.updatedGalleryArr.length <= imgShowNum) {
+                    document.querySelector('.img-show-num').textContent = imgShowNum - 1;
+                } else {
+                    document.querySelector('.img-show-num').textContent = '1';
+                }
+            }  
+
+            let cardBody = document.querySelector('.card-body');
+            while (cardBody.firstChild) {
+                cardBody.removeChild(cardBody.lastChild);
+            }
+            res.serverMsgArr.forEach(msg => {
+                let pTag = document.createElement('p');
+                pTag.className = 'upload-msg-paragraph';
+                pTag.innerText = msg;
+                if (msg.includes('successfully')) {
+                    pTag.style.color = 'green';
+                }
+                else {
+                    pTag.style.color = 'red';
+                }
+                cardBody.appendChild(pTag);
+            });
+            
+        },
+        error: err => {
+            console.log(err);
+        }
+    });
 });
+
 
 // animate gallery
 document.addEventListener('mouseover', e => {

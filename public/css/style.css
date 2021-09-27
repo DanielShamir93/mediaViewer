@@ -65,8 +65,8 @@
 }
 
 #nav-arrow_btn {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     background-image: url(/icons/left_arrow.png);
     transform: scaleX(-1);
     background-repeat: no-repeat;
@@ -74,7 +74,7 @@
     background-color: var(--body-color);
     cursor: pointer;
     position: absolute;
-    right: -40px;
+    right: -50px;
     top: 0;
     border: none;
     border-radius: 0 0 0 15px;
@@ -86,11 +86,20 @@
     opacity: 1;
 }
 
-#img-size-range {
+#img-size {
     position: absolute;
     top: 350px;
     right: 25px;
     width: 250px;
+}
+
+#img-size-range {
+    float: left;
+    width: 200px;
+}
+
+#img-size-percentage {
+    margin-left: 210px;
 }
 
 #select-cont {
@@ -253,7 +262,7 @@
 
 #remove-img-btn {
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 .editor {

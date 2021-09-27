@@ -11,15 +11,24 @@ exports.home = async (req, res, next) => {
 
 exports.remove = async (req, res, next) => {
     serverMsgArr = [];
-    let toRemoveArr = req.body.mediaToRemove.split(',');
+    let toRemoveArr = req.body.idArr;
 
-    let result = await MediaModel.deleteMany({fileName: {$in: toRemoveArr}});
-    if (result.deletedCount > 0) {
-        serverMsgArr.push(`successfully removed ${result.deletedCount} items.`);
+    try {
+        await MediaModel.deleteMany({fileName: {$in: toRemoveArr}});
+    } catch (err) {
+        serverMsgArr.push(err);
     }
- 
+    toRemoveArr.forEach(item => {
+        serverMsgArr.push(`successfully removed ${item}.`);
+    });
     const mediaArr = await MediaModel.find();
-    res.render('main', { mediaArr, serverMsgArr }); // render main from 'view engine' back to the user
+    let updatedGalleryArr = [];
+    mediaArr.forEach(record => {
+        updatedGalleryArr.push(record.fileName);
+    });
+    res.json({ updatedGalleryArr, serverMsgArr });
+    serverMsgArr = [];
+    // res.render('main', { mediaArr, serverMsgArr }); // render main from 'view engine' back to the user
 }
 
 
