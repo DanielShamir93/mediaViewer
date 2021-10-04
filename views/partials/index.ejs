@@ -2,7 +2,7 @@
     <div id="nav-cont">
         <div class="nav" id="nav">
             <form id="upload-form" action="/upload-media" method="POST" enctype="multipart/form-data">
-                <input type="file" class="form-control" id="upload-input" name="media" multiple accept="image/*, video/*"/>
+                <input type="file" class="form-control" id="upload-input" name="upload-media" multiple accept="image/*, video/*"/>
                 <div class="card bg-secondary mb-3" id="upload-status-card">
                     <div class="card-header">Server Messages</div>
                     <div class="card-body">
@@ -62,12 +62,12 @@
     </div>
     <span class="img-show-num"></span>
     <div id="control" class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" id="add-to-favorite-btn" class="btn btn-secondary">favorite</button>
-        <button type="button" id="remove-img-btn" class="btn btn-secondary" name="mediaToRemove">remove</button>
-        <button type="button" id="edit-img-btn" class="btn btn-secondary">edit</button>
-        <button type="button" id="slideshow-btn" class="btn btn-secondary">slideshow</button>
-        <button type="button" id="move-to-collection" class="btn btn-secondary">-></button>
-        <button type="button" id="share-img-btn" class="btn btn-secondary">share</button>
+        <button type="button" id="add-to-favorite-btn" class="btn btn-secondary control-btn">favorite</button>
+        <button type="button" id="remove-img-btn" class="btn btn-secondary control-btn" name="mediaToRemove">remove</button>
+        <button type="button" id="edit-img-btn" class="btn btn-secondary control-btn">edit</button>
+        <button type="button" id="slideshow-btn" class="btn btn-secondary control-btn">slideshow</button>
+        <button type="button" id="move-to-collection" class="btn btn-secondary control-btn">-></button>
+        <button type="button" id="share-img-btn" class="btn btn-secondary control-btn">share</button>
     </div>
 </div>
 <div class="editor">

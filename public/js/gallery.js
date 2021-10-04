@@ -200,13 +200,22 @@ document.addEventListener('mousedown', e => {
     }
 
     // remove-img-btn state
+    let oldGalleryArr = Array.prototype.slice.call(document.querySelectorAll('.img'));
+    let thereIsNoImgOnShow = oldGalleryArr.every(img => {
+        if (isImgOnShow(img)) {
+            return false;
+        } else {
+            return true;
+        }
+    });
+
     let removeImgBtn = document.getElementById('remove-img-btn');
     if (toMarkImgArr.length > 0) {
         Object.assign(removeImgBtn.style, {
             pointerEvents: 'auto',
             opacity: '1'
         });
-    } else {
+    } else if (!e.target.classList.contains('control-btn') && thereIsNoImgOnShow){
         Object.assign(removeImgBtn.style, {
             pointerEvents: 'none',
             opacity: '0.4'
@@ -219,6 +228,8 @@ $('#remove-img-btn').click(e => {
     toMarkImgArr.forEach(img => {
         idArr.push(img.id);
     });
+
+    let startTime = Date.now();
     $.ajax({
         url: '/remove-media',
         method: 'POST',
@@ -267,20 +278,20 @@ $('#remove-img-btn').click(e => {
                 }
             }  
 
+            let timeToRemoveInSec = (Date.now() - startTime) / 1000;
             let cardBody = document.querySelector('.card-body');
             while (cardBody.firstChild) {
                 cardBody.removeChild(cardBody.lastChild);
             }
-            res.serverMsgArr.forEach(msg => {
+            res.serverMsgArr.forEach((msg, index) => {
                 let pTag = document.createElement('p');
                 pTag.className = 'upload-msg-paragraph';
-                pTag.innerText = msg;
-                if (msg.includes('successfully')) {
-                    pTag.style.color = 'green';
+                if (index === res.serverMsgArr.length - 1) {
+                    pTag.innerText = msg + '\n[' + timeToRemoveInSec + 'sec]';
+                } else {
+                    pTag.innerText = `${msg}`;
                 }
-                else {
-                    pTag.style.color = 'red';
-                }
+                msg.includes('successfully') ? pTag.style.color = 'green' : pTag.style.color = 'red';
                 cardBody.appendChild(pTag);
             });
             

@@ -1,5 +1,6 @@
 
 let isRenderRunning = false;
+let isApplyingRunning = false;
 
 // filters variables
 let filtersObj = {
@@ -134,6 +135,8 @@ document.getElementById('clear-edit-btn').addEventListener('click', e => {
     
     if (lastEffectBtn) {
         lastEffectBtn.style.opacity = '1';
+        lastEffect = undefined;
+        lastEffectBtn = undefined;
     }
 });
 
@@ -150,10 +153,17 @@ document.getElementById('cancel-edit-btn').addEventListener('click', e => {
     document.querySelector('.switch-frame').style.visibility = 'visible';
     if (lastEffectBtn) {
         lastEffectBtn.style.opacity = '1';
+        lastEffect = undefined;
+        lastEffectBtn = undefined;
     }
 });
 
 document.getElementById('apply-edit-btn').addEventListener('click', e => {
+    if (isApplyingRunning) {
+        alert("Can't apply while processing previews changes");
+        return;
+    }
+
     let editor = document.querySelector('.editor');
     let canvas = document.querySelector('.canvas-block');
     let ctx = canvas.getContext('2d');
@@ -165,7 +175,47 @@ document.getElementById('apply-edit-btn').addEventListener('click', e => {
     lastImg.style.marginLeft = canvas.style.marginLeft; 
     lastImg.style.marginTop = canvas.style.marginTop;
 
-    lastImg.src = canvas.toDataURL();
+    let canvasURL = canvas.toDataURL();
+    lastImg.src = canvasURL;
+
+    let fileName = lastImg.id;
+    let contentType = canvasURL.match(/(?<=:).+(?=;)/)[0];
+    let imageBase64 = canvasURL.match(/(?<=,).+/)[0];
+    let mediaData = {
+        fileName,
+        contentType,
+        imageBase64
+    };
+
+    isApplyingRunning = true;
+    let startTime = Date.now();
+    $.ajax({
+        url: '/update-media',
+        method: 'POST',
+        data: { mediaData },
+        contentType: 'application/x-www-form-urlencoded',
+        success: res => {
+            let timeToUpdateInSec = (Date.now() - startTime) / 1000;
+            let msg = res.serverMsgArr[0];
+            let pTag = document.createElement('p');
+            pTag.className = 'upload-msg-paragraph';
+            pTag.innerText = `${msg}[${timeToUpdateInSec}sec]`;
+            if (msg.includes('successfully')) {
+                pTag.style.color = 'green';
+            }
+            else {
+                pTag.style.color = 'red';
+            }
+            document.querySelector('.card-body').appendChild(pTag);
+            isApplyingRunning = false;
+        },
+        error: err => {
+            console.log(err);
+            isApplyingRunning = false;
+        }
+    });
+
+    // change the DOM
     canvas.removeAttribute('data-caman-id');
     editor.style.visibility = 'hidden';
     canvas.style.visibility = 'hidden';
@@ -173,6 +223,8 @@ document.getElementById('apply-edit-btn').addEventListener('click', e => {
     document.querySelector('.switch-frame').style.visibility = 'visible';
     if (lastEffectBtn) {
         lastEffectBtn.style.opacity = '1';
+        lastEffect = undefined;
+        lastEffectBtn = undefined;
     }
 });
 

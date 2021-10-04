@@ -1,5 +1,5 @@
 const route = require('express').Router();
-const storage = require('../middleware/multer');
+const store = require('../middleware/multer');
 const controller = require('./controller');
 const bodyParser = require('body-parser');
 
@@ -9,10 +9,13 @@ const bodyParser = require('body-parser');
 route.get('/', controller.home);
 
 
-let urlencodedParser = bodyParser.urlencoded({ extended: true });
-route.post('/remove-media', urlencodedParser, controller.remove);
+// remove records from MongoDB
+route.post('/remove-media', controller.remove);
+
+// update record on MongoDB
+route.post('/update-media', controller.update)
 
 // uploads the media to MongoDB and redirect to /upload-media and return the data to the user
-route.post('/upload-media', storage.array('media'), controller.uploads);
+route.post('/upload-media', store.array('upload-media'), controller.uploads);
 
 module.exports = route;

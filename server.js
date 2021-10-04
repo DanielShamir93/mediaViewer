@@ -18,6 +18,10 @@ connectToMongodb();
 // setup view engine
 app.set('view engine', 'ejs');
 
+// limit the json request size 
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+
 // calling routes
 const routerPath = './server/router/router';
 const router = require(path.join(__dirname, routerPath));

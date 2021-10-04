@@ -8,6 +8,16 @@ exports.home = async (req, res, next) => {
     res.render('main', { mediaArr, serverMsgArr }); // render main from 'view engine' back to the user
 }
 
+exports.update = async (req, res, next) => {
+    let recordToUpdate = req.body.mediaData;
+    try {
+        let updatedRecord = await MediaModel.findOneAndUpdate({'fileName': recordToUpdate.fileName}, {imageBase64: recordToUpdate.imageBase64});
+        serverMsgArr.push(`${updatedRecord.fileName} successfully updated.`);
+    } catch (err) {
+        serverMsgArr.push(err);
+    }
+    res.json({ serverMsgArr });
+}
 
 exports.remove = async (req, res, next) => {
     serverMsgArr = [];
@@ -48,12 +58,12 @@ exports.uploads = (req, res, next) => {
         return media.toString('base64');
     });
 
-    let resultArr = mediaArr.map((src, index) => {
+    let resultArr = mediaArr.map((base64, index) => {
         // create object to store data in the database
         let mediaFile = {
             fileName: files[index].originalname,
             contentType: files[index].mimetype,
-            imageBase64: src
+            imageBase64: base64
         }
         return new MediaModel(mediaFile)
             .save()
