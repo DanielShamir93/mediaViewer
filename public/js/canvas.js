@@ -1,3 +1,4 @@
+import { lastImg } from './listeners/gallery_listen.js'
 
 let isRenderRunning = false;
 let isApplyingRunning = false;
@@ -26,7 +27,7 @@ let lastEffectBtn = undefined;
 document.addEventListener('click', e => {
 
     if (e.target.classList.contains('revert-rendering')) {
-        for (filter in filtersObj) {
+        for (let filter in filtersObj) {
             filtersObj[filter] = 0;
         }
         filtersObj['gamma'] = 1;

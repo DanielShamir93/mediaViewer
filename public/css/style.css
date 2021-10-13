@@ -260,6 +260,13 @@
     z-index: 1000;
 }
 
+#slideshow-btn {
+    background-image: url(/icons/play.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
 #remove-img-btn {
     pointer-events: none;
     opacity: 0.4;

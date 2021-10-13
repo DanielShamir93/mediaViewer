@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 // gets the media from MongoDB and redirect to /main.ejs
 route.get('/', controller.home);
 
-
 // remove records from MongoDB
 route.post('/remove-media', controller.remove);
 

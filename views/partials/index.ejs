@@ -6,7 +6,7 @@
                 <div class="card bg-secondary mb-3" id="upload-status-card">
                     <div class="card-header">Server Messages</div>
                     <div class="card-body">
-                        <% if (typeof serverMsgArr !== 'undefined') { %>
+                        <% if (serverMsgArr.length > 0) { %>
                             <% serverMsgArr.forEach(msg => { %>
                                 <p class='upload-msg-paragraph'><%= msg%></p>
                             <% }); %>
@@ -25,8 +25,8 @@
                 <form action="" id="collection-form">
                     <select class="form-select" id="collection-select" name="collection-select" size="8">
                         <optgroup label="Default">
-                            <option value="source" selected>source</option>
-                            <option value="favorites">favorites</option>
+                            <option value="source" selected>Source</option>
+                            <option value="favorites">Favorites</option>
                         </optgroup>
                         <optgroup label="Your Collections">
                             
@@ -46,7 +46,7 @@
             <input class="form-check-input" type="checkbox" id="lights-switch-checkbox" checked="">
             <label class="form-check-label" for="lights-switch-checkbox">lights on</label>
         </div>
-        <input class="form-control form-control-lg" type="text" placeholder="Collection Name" id="collection-name">
+        <input class="form-control form-control-lg" type="text" readonly="readonly" placeholder="Collection Name" id="collection-name" value="Source Collection">
         <div class="gallery">
             <% for (let i = 0; i < mediaArr.length; i++) { %>
                 <div class="frame" id="frame_<%= mediaArr[i].fileName %>">
@@ -62,11 +62,11 @@
     </div>
     <span class="img-show-num"></span>
     <div id="control" class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" id="add-to-favorite-btn" class="btn btn-secondary control-btn">favorite</button>
-        <button type="button" id="remove-img-btn" class="btn btn-secondary control-btn" name="mediaToRemove">remove</button>
-        <button type="button" id="edit-img-btn" class="btn btn-secondary control-btn">edit</button>
-        <button type="button" id="slideshow-btn" class="btn btn-secondary control-btn">slideshow</button>
+        <button type="button" id="add-to-favorites-btn" class="btn btn-secondary control-btn">favorites</button>
         <button type="button" id="move-to-collection" class="btn btn-secondary control-btn">-></button>
+        <button type="button" id="edit-img-btn" class="btn btn-secondary control-btn">edit</button>
+        <button type="button" id="slideshow-btn" class="btn btn-secondary control-btn"></button>
+        <button type="button" id="remove-img-btn" class="btn btn-secondary control-btn" name="mediaToRemove">remove</button>
         <button type="button" id="share-img-btn" class="btn btn-secondary control-btn">share</button>
     </div>
 </div>

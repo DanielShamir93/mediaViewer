@@ -22,25 +22,28 @@ exports.update = async (req, res, next) => {
 exports.remove = async (req, res, next) => {
     serverMsgArr = [];
     let toRemoveArr = req.body.idArr;
+    let mediaArr = [];
 
-    try {
-        await MediaModel.deleteMany({fileName: {$in: toRemoveArr}});
-    } catch (err) {
-        serverMsgArr.push(err);
+    if (toRemoveArr !== undefined) {
+        try {
+            await MediaModel.deleteMany({fileName: {$in: toRemoveArr}});
+        } catch (err) {
+            serverMsgArr.push(err);
+        }
+        toRemoveArr.forEach(item => {
+            serverMsgArr.push(`successfully removed ${item}.`);
+        });
+        mediaArr = await MediaModel.find();
+        let updatedGalleryArr = [];
+        mediaArr.forEach(record => {
+            updatedGalleryArr.push(record.fileName);
+        });
+        res.json({ updatedGalleryArr, serverMsgArr });
+        serverMsgArr = [];
+    } else {
+        res.render('main', { mediaArr, serverMsgArr });
     }
-    toRemoveArr.forEach(item => {
-        serverMsgArr.push(`successfully removed ${item}.`);
-    });
-    const mediaArr = await MediaModel.find();
-    let updatedGalleryArr = [];
-    mediaArr.forEach(record => {
-        updatedGalleryArr.push(record.fileName);
-    });
-    res.json({ updatedGalleryArr, serverMsgArr });
-    serverMsgArr = [];
-    // res.render('main', { mediaArr, serverMsgArr }); // render main from 'view engine' back to the user
 }
-
 
 exports.uploads = (req, res, next) => {
     serverMsgArr = [];
